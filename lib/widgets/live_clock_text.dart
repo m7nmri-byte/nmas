@@ -32,8 +32,11 @@ class _LiveClockTextState extends State<LiveClockText> {
   @override
   Widget build(BuildContext context) {
     final now = DateTime.now();
+    final period = now.hour < 12 ? 'ص' : 'م';
+    var h12 = now.hour % 12;
+    if (h12 == 0) h12 = 12;
     final text =
-        '${twoDigits(now.hour)}:${twoDigits(now.minute)}:${twoDigits(now.second)}';
+        '${twoDigits(h12)}:${twoDigits(now.minute)}:${twoDigits(now.second)} $period';
     return Text(text, style: widget.style, textDirection: TextDirection.ltr);
   }
 }

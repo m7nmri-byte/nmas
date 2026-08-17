@@ -66,6 +66,13 @@ class _SessionFormDialogState extends State<SessionFormDialog> {
   String _formatTimeOfDay(TimeOfDay t) =>
       '${t.hour.toString().padLeft(2, '0')}:${t.minute.toString().padLeft(2, '0')}';
 
+  String _displayTimeOfDay(TimeOfDay t) {
+    final period = t.hour < 12 ? 'ص' : 'م';
+    var h12 = t.hour % 12;
+    if (h12 == 0) h12 = 12;
+    return '${h12.toString().padLeft(2, '0')}:${t.minute.toString().padLeft(2, '0')} $period';
+  }
+
   @override
   void dispose() {
     _title.dispose();
@@ -160,7 +167,7 @@ class _SessionFormDialogState extends State<SessionFormDialog> {
                     Expanded(
                       child: OutlinedButton(
                         onPressed: () => _pickTime(true),
-                        child: Text('من: ${_formatTimeOfDay(_startTime)}',
+                        child: Text('من: ${_displayTimeOfDay(_startTime)}',
                             textDirection: TextDirection.ltr),
                       ),
                     ),
@@ -168,7 +175,7 @@ class _SessionFormDialogState extends State<SessionFormDialog> {
                     Expanded(
                       child: OutlinedButton(
                         onPressed: () => _pickTime(false),
-                        child: Text('إلى: ${_formatTimeOfDay(_endTime)}',
+                        child: Text('إلى: ${_displayTimeOfDay(_endTime)}',
                             textDirection: TextDirection.ltr),
                       ),
                     ),

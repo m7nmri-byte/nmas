@@ -42,11 +42,12 @@ class SessionStatusCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final style = _styleFor(kind);
     final isCurrent = kind == SessionCardKind.current;
+    final isPast = kind == SessionCardKind.past;
 
     return Container(
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(24),
-        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(isPast ? 18 : 24),
+        color: isPast ? AppColors.surface.withOpacity(0.6) : AppColors.surface,
         border: Border.all(
           color: isCurrent ? style.color.withOpacity(0.55) : AppColors.outline,
           width: isCurrent ? 1.4 : 1,
@@ -62,8 +63,39 @@ class SessionStatusCard extends StatelessWidget {
               ]
             : null,
       ),
-      padding: const EdgeInsets.all(20),
-      child: session == null ? _empty(context, style) : _content(context, session!, style),
+      padding: EdgeInsets.all(isPast ? 14 : 20),
+      child: session == null
+          ? _empty(context, style)
+          : (isPast ? _pastContent(context, session!, style) : _content(context, session!, style)),
+    );
+  }
+
+  Widget _pastContent(BuildContext context, Session s, _KindStyle style) {
+    final theme = Theme.of(context);
+    final start = s.startDateTime(campStart);
+    final end = s.endDateTime(campStart);
+    return Row(
+      children: [
+        Icon(style.icon, color: style.color, size: 16),
+        const SizedBox(width: 10),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(s.title,
+                  style: theme.textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w600),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis),
+              const SizedBox(height: 2),
+              Text('انتهى ${formatClock(end)}', style: theme.textTheme.bodySmall),
+            ],
+          ),
+        ),
+        Text(
+          '${formatClock(start)} – ${formatClock(end)}',
+          style: AppTheme.mono(fontSize: 11.5, fontWeight: FontWeight.w600, color: AppColors.textFaint),
+        ),
+      ],
     );
   }
 

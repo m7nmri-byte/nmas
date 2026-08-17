@@ -141,14 +141,14 @@ class _WideLayout extends StatelessWidget {
           child: Column(
             children: [
               SessionStatusCard(
-                kind: SessionCardKind.next,
-                session: status.next,
+                kind: SessionCardKind.past,
+                session: status.past,
                 campStart: campStart,
               ),
               const SizedBox(height: 16),
               SessionStatusCard(
-                kind: SessionCardKind.past,
-                session: status.past,
+                kind: SessionCardKind.next,
+                session: status.next,
                 campStart: campStart,
               ),
             ],
@@ -169,6 +169,12 @@ class _NarrowLayout extends StatelessWidget {
     return Column(
       children: [
         SessionStatusCard(
+          kind: SessionCardKind.past,
+          session: status.past,
+          campStart: campStart,
+        ),
+        const SizedBox(height: 14),
+        SessionStatusCard(
           kind: SessionCardKind.current,
           session: status.current,
           campStart: campStart,
@@ -177,12 +183,6 @@ class _NarrowLayout extends StatelessWidget {
         SessionStatusCard(
           kind: SessionCardKind.next,
           session: status.next,
-          campStart: campStart,
-        ),
-        const SizedBox(height: 14),
-        SessionStatusCard(
-          kind: SessionCardKind.past,
-          session: status.past,
           campStart: campStart,
         ),
       ],

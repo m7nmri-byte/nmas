@@ -116,4 +116,10 @@ String formatDuration(Duration d) {
 
 String twoDigits(int n) => n.toString().padLeft(2, '0');
 
-String formatClock(DateTime t) => '${twoDigits(t.hour)}:${twoDigits(t.minute)}';
+/// يعرض الوقت بنظام ١٢ ساعة مع لاحقة صباحاً/مساءً (ص / م).
+String formatClock(DateTime t) {
+  final period = t.hour < 12 ? 'ص' : 'م';
+  var h12 = t.hour % 12;
+  if (h12 == 0) h12 = 12;
+  return '${twoDigits(h12)}:${twoDigits(t.minute)} $period';
+}
