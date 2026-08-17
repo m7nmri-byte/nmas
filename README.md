@@ -48,24 +48,20 @@ flutter pub get
 flutter run -d chrome
 ```
 
-## ربط المشروع بـ Firebase (خطوة ضرورية قبل أي شيء)
+## ربط المشروع بـ Firebase
 
-1. أنشئ مشروع Firebase من [console.firebase.google.com](https://console.firebase.google.com).
-2. فعّل **Cloud Firestore** (Build → Firestore Database → Create database،
-   اختر وضع production أو test ثم عدّل القواعد لاحقاً).
-3. ثبّت أدوات ربط FlutterFire إذا لم تكن مثبتة:
+`lib/firebase_options.dart` معبأ بالفعل بإعدادات مشروع Firebase الحقيقي
+**bahah-ed88e**. المتبقي فقط:
+
+1. من [console.firebase.google.com](https://console.firebase.google.com)
+   افتح مشروع `bahah-ed88e`، وتأكد أن **Cloud Firestore** مفعّل
+   (Build → Firestore Database → Create database إن لم يكن موجوداً).
+2. سجّل الدخول بـ Firebase CLI وحدّد المشروع (مرة واحدة فقط):
    ```bash
-   dart pub global activate flutterfire_cli
+   firebase login
+   firebase use bahah-ed88e
    ```
-4. من داخل مجلد المشروع نفّذ:
-   ```bash
-   flutterfire configure
-   ```
-   سيطلب منك تسجيل الدخول (يفتح متصفحاً) واختيار مشروع Firebase الذي
-   أنشأته، ثم سيُعيد كتابة `lib/firebase_options.dart` تلقائياً بالقيم
-   الصحيحة (حالياً الملف يحتوي على قيم وهمية `REPLACE_WITH_...` كنموذج
-   فقط، والتطبيق لن يتصل بأي قاعدة بيانات قبل استبدالها).
-5. ارفع قواعد الأمان:
+3. ارفع قواعد الأمان المرفقة في `firestore.rules`:
    ```bash
    firebase deploy --only firestore:rules
    ```
