@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../models/app_settings.dart';
 import '../models/session.dart';
-import 'seed_data.dart';
 
 class FirestoreService {
   FirestoreService._();
@@ -47,29 +46,6 @@ class FirestoreService {
 
   Future<void> setOrder(String id, int order) =>
       _sessions.doc(id).update({'order': order});
-
-  /// يرفع بيانات البرنامج المفرغة من الجداول الأصلية إذا كانت القاعدة فارغة.
-  Future<void> seedIfEmpty() async {
-    final snap = await _sessions.limit(1).get();
-    if (snap.docs.isNotEmpty) return;
-    await seedNow();
-  }
-
-  /// يرفع بيانات البرنامج المبدئية بغض النظر عن المحتوى الحالي (يُستخدم من
-  /// لوحة التحكم عند الحاجة لإعادة التعبئة).
-  Future<void> seedNow() async {
-    final batch = _db.batch();
-    for (final s in kSeedSessions) {
-      final ref = _sessions.doc();
-      batch.set(ref, s.toMap());
-    }
-    batch.set(
-      _settingsDoc,
-      {'campStartDate': Timestamp.fromDate(kDefaultCampStartDate)},
-      SetOptions(merge: true),
-    );
-    await batch.commit();
-  }
 
   Future<void> deleteAllSessions() async {
     final snap = await _sessions.get();

@@ -52,7 +52,7 @@ class ControlPanelScreen extends StatelessWidget {
                 final sessions = sessionsSnap.data ?? [];
                 return Column(
                   children: [
-                    _SettingsBar(settings: settings, hasSessions: sessions.isNotEmpty),
+                    _SettingsBar(settings: settings),
                     if (sessions.isNotEmpty)
                       _LiveStatusStrip(sessions: sessions, campStart: settings.campStartDate),
                     Expanded(
@@ -81,8 +81,7 @@ class ControlPanelScreen extends StatelessWidget {
 
 class _SettingsBar extends StatelessWidget {
   final AppSettings settings;
-  final bool hasSessions;
-  const _SettingsBar({required this.settings, required this.hasSessions});
+  const _SettingsBar({required this.settings});
 
   @override
   Widget build(BuildContext context) {
@@ -121,12 +120,6 @@ class _SettingsBar extends StatelessWidget {
               icon: const Icon(Icons.edit_calendar, size: 18),
               label: const Text('تغيير التاريخ'),
             ),
-            if (!hasSessions)
-              FilledButton.icon(
-                onPressed: () => FirestoreService.instance.seedIfEmpty(),
-                icon: const Icon(Icons.cloud_upload, size: 18),
-                label: const Text('استيراد البيانات الابتدائية'),
-              ),
           ],
         ),
       ),
