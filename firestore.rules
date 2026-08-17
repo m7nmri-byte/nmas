@@ -1,0 +1,21 @@
+rules_version = '2';
+
+// ملاحظة أمنية مهمة:
+// لا يوجد في هذا التطبيق نظام مصادقة حقيقي (Firebase Auth) — التحكم محمي فقط
+// بكلمة مرور بسيطة على مستوى الواجهة (Client-side gate) كما طلب صاحب المشروع.
+// لذلك قاعدة البيانات هنا مفتوحة للقراءة والكتابة لأي شخص يعرف عنوان المشروع.
+// هذا مقبول لأداة داخلية بسيطة لمخيم/فعالية، لكنه ليس آمناً بمعنى صارم.
+// إذا احتجت حماية حقيقية لاحقاً: فعّل Firebase App Check، أو أضف Firebase
+// Authentication (بريد/كلمة مرور) للمشرف وقيّد الكتابة بـ request.auth != null.
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /sessions/{sessionId} {
+      allow read: if true;
+      allow write: if true;
+    }
+    match /config/{docId} {
+      allow read: if true;
+      allow write: if true;
+    }
+  }
+}
