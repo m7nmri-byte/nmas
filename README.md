@@ -67,8 +67,29 @@ flutter run -d chrome
 
 ## النشر (الحصول على رابطين فعليين يعملان)
 
-الخيار الأسهل هو **Firebase Hosting** (متوافق مباشرة مع `firebase.json`
-المُعدّ مسبقاً في هذا المشروع):
+### عبر Vercel (لا يحتاج تثبيت Flutter على جهازك إطلاقاً)
+
+المشروع معه ملف `vercel.json` جاهز يجعل Vercel نفسه يثبّت Flutter
+ويبني الموقع أثناء عملية النشر السحابية — أنت فقط تربط المستودع:
+
+1. افتح [vercel.com](https://vercel.com) وسجّل الدخول (يمكن مباشرة
+   بحساب GitHub).
+2. **Add New... → Project → Import Git Repository** واختر
+   `m7nmri-byte/nmas`.
+3. عند شاشة الإعدادات: اترك **Framework Preset = Other** (سيُقرأ باقي
+   الإعدادات — أمر البناء ومجلد الإخراج — تلقائياً من `vercel.json`).
+4. اضغط **Deploy** وانتظر (أول بناء يأخذ دقائق قليلة إضافية لأنه يحمّل
+   Flutter SDK نفسه).
+
+بعد اكتمال النشر ستحصل على رابط مثل `https://nmas.vercel.app`:
+
+- رابط العرض: `https://nmas.vercel.app/view`
+- رابط التحكم: `https://nmas.vercel.app/control`
+
+وميزة إضافية: أي تعديل تدفعه لاحقاً إلى فرع `main` على GitHub سيُعاد نشره
+تلقائياً على نفس الرابط.
+
+### عبر Firebase Hosting (بديل، يحتاج Flutter مثبتاً محلياً)
 
 ```bash
 flutter build web
@@ -82,10 +103,6 @@ firebase deploy --only hosting
 
 (إعادة الكتابة (`rewrites`) في `firebase.json` مضبوطة مسبقاً بحيث يعمل
 التوجيه الداخلي لـ Flutter بشكل صحيح مع أي مسار).
-
-يمكنك أيضاً استضافة `build/web` على أي مزوّد استضافة ثابت آخر (Netlify،
-Vercel، GitHub Pages...) طالما يوجّه كل المسارات إلى `index.html` (نفس
-فكرة الـ SPA rewrite).
 
 ## هيكل المشروع
 
