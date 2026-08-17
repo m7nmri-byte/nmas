@@ -6,6 +6,7 @@ import '../models/app_settings.dart';
 import '../models/schedule_status.dart';
 import '../models/session.dart';
 import '../services/firestore_service.dart';
+import '../theme.dart';
 import '../widgets/countdown_text.dart';
 import '../widgets/session_card.dart';
 import 'session_form_dialog.dart';
@@ -22,6 +23,7 @@ class ControlPanelScreen extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           title: const Text('لوحة التحكم'),
+          centerTitle: false,
           actions: [
             IconButton(
               tooltip: 'فتح رابط العرض',
@@ -30,13 +32,28 @@ class ControlPanelScreen extends StatelessWidget {
             ),
             IconButton(
               tooltip: 'تسجيل الخروج',
-              icon: const Icon(Icons.logout),
+              icon: const Icon(Icons.logout_rounded),
               onPressed: onLogout,
             ),
+            const SizedBox(width: 8),
           ],
-          bottom: TabBar(
-            isScrollable: true,
-            tabs: [for (final d in kDayNames) Tab(text: d)],
+          bottom: PreferredSize(
+            preferredSize: const Size.fromHeight(56),
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+              child: Container(
+                height: 44,
+                decoration: BoxDecoration(
+                  color: AppColors.surfaceRaised,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                padding: const EdgeInsets.all(4),
+                child: TabBar(
+                  isScrollable: false,
+                  tabs: [for (final d in kDayNames) Tab(text: d)],
+                ),
+              ),
+            ),
           ),
         ),
         body: StreamBuilder<AppSettings>(
@@ -85,43 +102,48 @@ class _SettingsBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: Theme.of(context).colorScheme.surfaceContainerHighest,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-        child: Wrap(
-          crossAxisAlignment: WrapCrossAlignment.center,
-          spacing: 12,
-          runSpacing: 8,
-          children: [
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Icon(Icons.calendar_today, size: 18),
-                const SizedBox(width: 6),
-                Text(
-                  'بداية المخيم (اليوم الأول): '
-                  '${settings.campStartDate.year}-${settings.campStartDate.month.toString().padLeft(2, '0')}-${settings.campStartDate.day.toString().padLeft(2, '0')}',
-                ),
-              ],
-            ),
-            TextButton.icon(
-              onPressed: () async {
-                final picked = await showDatePicker(
-                  context: context,
-                  initialDate: settings.campStartDate,
-                  firstDate: DateTime(settings.campStartDate.year - 2),
-                  lastDate: DateTime(settings.campStartDate.year + 2),
-                );
-                if (picked != null) {
-                  await FirestoreService.instance.setCampStartDate(picked);
-                }
-              },
-              icon: const Icon(Icons.edit_calendar, size: 18),
-              label: const Text('تغيير التاريخ'),
-            ),
-          ],
-        ),
+    return Container(
+      width: double.infinity,
+      margin: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: AppColors.outline),
+      ),
+      child: Wrap(
+        crossAxisAlignment: WrapCrossAlignment.center,
+        spacing: 14,
+        runSpacing: 8,
+        children: [
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Icon(Icons.calendar_today_rounded, size: 16, color: AppColors.textMuted),
+              const SizedBox(width: 8),
+              Text('بداية المخيم: ', style: Theme.of(context).textTheme.bodyMedium),
+              Text(
+                '${settings.campStartDate.year}-${settings.campStartDate.month.toString().padLeft(2, '0')}-${settings.campStartDate.day.toString().padLeft(2, '0')}',
+                style: AppTheme.mono(fontSize: 13.5, fontWeight: FontWeight.w700),
+              ),
+            ],
+          ),
+          TextButton.icon(
+            onPressed: () async {
+              final picked = await showDatePicker(
+                context: context,
+                initialDate: settings.campStartDate,
+                firstDate: DateTime(settings.campStartDate.year - 2),
+                lastDate: DateTime(settings.campStartDate.year + 2),
+              );
+              if (picked != null) {
+                await FirestoreService.instance.setCampStartDate(picked);
+              }
+            },
+            icon: const Icon(Icons.edit_calendar_rounded, size: 16),
+            label: const Text('تغيير التاريخ'),
+          ),
+        ],
       ),
     );
   }
@@ -137,33 +159,45 @@ class _LiveStatusStrip extends StatelessWidget {
     final status = ScheduleStatus.compute(sessions, campStart, DateTime.now());
     final theme = Theme.of(context);
     if (status.current == null) {
-      return const Padding(
-        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        child: Text('لا يوجد برنامج حالياً'),
+      return Container(
+        width: double.infinity,
+        margin: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        decoration: BoxDecoration(
+          color: AppColors.surface,
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(color: AppColors.outline),
+        ),
+        child: Text('لا يوجد برنامج حالياً', style: theme.textTheme.bodyMedium),
       );
     }
     final end = status.current!.endDateTime(campStart);
     return Container(
       width: double.infinity,
-      color: theme.colorScheme.primaryContainer,
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+      margin: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      decoration: BoxDecoration(
+        color: AppColors.goldSoft,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: AppColors.gold.withOpacity(0.4)),
+      ),
       child: Row(
         children: [
-          Icon(Icons.play_circle_fill, color: theme.colorScheme.onPrimaryContainer),
-          const SizedBox(width: 8),
+          const Icon(Icons.bolt_rounded, color: AppColors.gold, size: 20),
+          const SizedBox(width: 10),
           Expanded(
             child: Text(
-              'الآن: ${status.current!.title}',
-              style: theme.textTheme.titleSmall,
+              status.current!.title,
+              style: theme.textTheme.titleMedium,
               overflow: TextOverflow.ellipsis,
             ),
           ),
           const SizedBox(width: 8),
-          Text('المتبقي', style: theme.textTheme.labelSmall),
-          const SizedBox(width: 4),
+          Text('المتبقي', style: theme.textTheme.labelMedium),
+          const SizedBox(width: 6),
           CountdownText(
             target: end,
-            style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
+            style: AppTheme.mono(fontSize: 15, fontWeight: FontWeight.w700, color: AppColors.gold),
           ),
         ],
       ),
@@ -180,10 +214,11 @@ class _DayEditor extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.transparent,
       body: sessions.isEmpty
           ? const Center(child: Text('لا توجد فقرات بعد لهذا اليوم'))
           : ListView.builder(
-              padding: const EdgeInsets.only(bottom: 88, top: 8),
+              padding: const EdgeInsets.fromLTRB(16, 8, 16, 88),
               itemCount: sessions.length,
               itemBuilder: (context, index) {
                 final s = sessions[index];
@@ -192,41 +227,42 @@ class _DayEditor extends StatelessWidget {
                 return SessionListTile(
                   session: s,
                   campStart: campStart,
+                  isLast: index == sessions.length - 1,
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      IconButton(
-                        tooltip: 'تقديم (لأعلى)',
-                        icon: const Icon(Icons.arrow_upward, size: 18),
-                        onPressed: prev == null
+                      _actionIcon(
+                        Icons.arrow_upward_rounded,
+                        'تقديم',
+                        prev == null
                             ? null
                             : () async {
                                 await FirestoreService.instance.setOrder(s.id, prev.order);
                                 await FirestoreService.instance.setOrder(prev.id, s.order);
                               },
                       ),
-                      IconButton(
-                        tooltip: 'تأخير (لأسفل)',
-                        icon: const Icon(Icons.arrow_downward, size: 18),
-                        onPressed: next == null
+                      _actionIcon(
+                        Icons.arrow_downward_rounded,
+                        'تأخير',
+                        next == null
                             ? null
                             : () async {
                                 await FirestoreService.instance.setOrder(s.id, next.order);
                                 await FirestoreService.instance.setOrder(next.id, s.order);
                               },
                       ),
-                      IconButton(
-                        tooltip: 'تعديل',
-                        icon: const Icon(Icons.edit, size: 18),
-                        onPressed: () => showDialog(
+                      _actionIcon(
+                        Icons.edit_rounded,
+                        'تعديل',
+                        () => showDialog(
                           context: context,
                           builder: (_) => SessionFormDialog(existing: s),
                         ),
                       ),
-                      IconButton(
-                        tooltip: 'حذف',
-                        icon: const Icon(Icons.delete_outline, size: 18),
-                        onPressed: () async {
+                      _actionIcon(
+                        Icons.delete_outline_rounded,
+                        'حذف',
+                        () async {
                           final confirmed = await showDialog<bool>(
                             context: context,
                             builder: (_) => AlertDialog(
@@ -248,6 +284,7 @@ class _DayEditor extends StatelessWidget {
                             await FirestoreService.instance.deleteSession(s.id);
                           }
                         },
+                        color: AppColors.rose,
                       ),
                     ],
                   ),
@@ -271,9 +308,20 @@ class _DayEditor extends StatelessWidget {
             ),
           );
         },
-        icon: const Icon(Icons.add),
+        icon: const Icon(Icons.add_rounded),
         label: const Text('إضافة برنامج'),
       ),
+    );
+  }
+
+  Widget _actionIcon(IconData icon, String tooltip, VoidCallback? onPressed, {Color? color}) {
+    return IconButton(
+      tooltip: tooltip,
+      icon: Icon(icon, size: 17),
+      color: color ?? AppColors.textMuted,
+      onPressed: onPressed,
+      splashRadius: 18,
+      visualDensity: VisualDensity.compact,
     );
   }
 }

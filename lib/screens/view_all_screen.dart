@@ -4,6 +4,7 @@ import '../constants.dart';
 import '../models/app_settings.dart';
 import '../models/session.dart';
 import '../services/firestore_service.dart';
+import '../theme.dart';
 import '../widgets/session_card.dart';
 
 /// شاشة عرض كل فقرات البرنامج مجمّعة حسب اليوم.
@@ -17,8 +18,23 @@ class ViewAllScreen extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           title: const Text('كل البرنامج'),
-          bottom: TabBar(
-            tabs: [for (final d in kDayNames) Tab(text: d)],
+          centerTitle: false,
+          bottom: PreferredSize(
+            preferredSize: const Size.fromHeight(56),
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+              child: Container(
+                height: 44,
+                decoration: BoxDecoration(
+                  color: AppColors.surfaceRaised,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                padding: const EdgeInsets.all(4),
+                child: TabBar(
+                  tabs: [for (final d in kDayNames) Tab(text: d)],
+                ),
+              ),
+            ),
           ),
         ),
         body: StreamBuilder<AppSettings>(
@@ -72,7 +88,7 @@ class _DayList extends StatelessWidget {
       return const Center(child: Text('لا توجد فقرات لهذا اليوم'));
     }
     return ListView.builder(
-      padding: const EdgeInsets.symmetric(vertical: 8),
+      padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
       itemCount: sessions.length,
       itemBuilder: (context, index) {
         final s = sessions[index];
@@ -82,6 +98,7 @@ class _DayList extends StatelessWidget {
           session: s,
           campStart: campStart,
           highlight: isCurrent,
+          isLast: index == sessions.length - 1,
         );
       },
     );

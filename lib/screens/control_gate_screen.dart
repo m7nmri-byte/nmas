@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../constants.dart';
+import '../theme.dart';
 import 'control_panel_screen.dart';
 
 /// بوابة كلمة المرور لرابط التحكم.
@@ -68,55 +69,70 @@ class _ControlGateScreenState extends State<ControlGateScreen> {
       return ControlPanelScreen(onLogout: _logout);
     }
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('دخول لوحة التحكم'),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_forward),
-          tooltip: 'رجوع للعرض',
-          onPressed: () => context.go('/view'),
-        ),
-      ),
       body: Center(
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 360),
-          child: Padding(
-            padding: const EdgeInsets.all(24),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Icon(Icons.lock_outline, size: 48),
-                const SizedBox(height: 16),
-                Text('هذه الصفحة تتطلب كلمة مرور التحكم',
-                    style: Theme.of(context).textTheme.titleMedium,
-                    textAlign: TextAlign.center),
-                const SizedBox(height: 16),
-                TextField(
-                  controller: _controller,
-                  obscureText: _obscure,
-                  autofocus: true,
-                  onSubmitted: (_) => _submit(),
-                  decoration: InputDecoration(
-                    labelText: 'كلمة المرور',
-                    errorText: _error,
-                    border: const OutlineInputBorder(),
-                    suffixIcon: IconButton(
-                      icon: Icon(_obscure ? Icons.visibility_off : Icons.visibility),
-                      onPressed: () => setState(() => _obscure = !_obscure),
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(24),
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 380),
+            child: Container(
+              padding: const EdgeInsets.all(28),
+              decoration: BoxDecoration(
+                color: AppColors.surface,
+                borderRadius: BorderRadius.circular(24),
+                border: Border.all(color: AppColors.outline),
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    width: 56,
+                    height: 56,
+                    decoration: BoxDecoration(
+                      color: AppColors.goldSoft,
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: const Icon(Icons.lock_rounded, color: AppColors.gold, size: 26),
+                  ),
+                  const SizedBox(height: 18),
+                  Text('لوحة التحكم', style: Theme.of(context).textTheme.headlineSmall),
+                  const SizedBox(height: 6),
+                  Text(
+                    'أدخل كلمة المرور للمتابعة',
+                    style: Theme.of(context).textTheme.bodyMedium,
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 22),
+                  TextField(
+                    controller: _controller,
+                    obscureText: _obscure,
+                    autofocus: true,
+                    textAlign: TextAlign.center,
+                    onSubmitted: (_) => _submit(),
+                    decoration: InputDecoration(
+                      hintText: 'كلمة المرور',
+                      errorText: _error,
+                      suffixIcon: IconButton(
+                        icon: Icon(_obscure ? Icons.visibility_off_rounded : Icons.visibility_rounded,
+                            size: 20),
+                        onPressed: () => setState(() => _obscure = !_obscure),
+                      ),
                     ),
                   ),
-                ),
-                const SizedBox(height: 16),
-                SizedBox(
-                  width: double.infinity,
-                  child: FilledButton(
-                    onPressed: _submit,
-                    child: const Padding(
-                      padding: EdgeInsets.symmetric(vertical: 12),
-                      child: Text('دخول'),
+                  const SizedBox(height: 16),
+                  SizedBox(
+                    width: double.infinity,
+                    child: FilledButton(
+                      onPressed: _submit,
+                      child: const Text('دخول'),
                     ),
                   ),
-                ),
-              ],
+                  const SizedBox(height: 8),
+                  TextButton(
+                    onPressed: () => context.go('/view'),
+                    child: const Text('رجوع للعرض'),
+                  ),
+                ],
+              ),
             ),
           ),
         ),

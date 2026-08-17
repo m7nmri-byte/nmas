@@ -1,11 +1,11 @@
 {
-    "name": "برنامج المخيم",
-    "short_name": "برنامج المخيم",
+    "name": "الجدول الزمني",
+    "short_name": "الجدول الزمني",
     "start_url": "/view",
     "display": "standalone",
-    "background_color": "#0F172A",
-    "theme_color": "#0F172A",
-    "description": "عرض والتحكم المباشر في برنامج المخيم الزمني",
+    "background_color": "#0A0F1E",
+    "theme_color": "#0A0F1E",
+    "description": "عرض وتحكم مباشر بجدول زمني",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": []

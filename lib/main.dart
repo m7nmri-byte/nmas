@@ -8,6 +8,7 @@ import 'firebase_options.dart';
 import 'screens/control_gate_screen.dart';
 import 'screens/view_all_screen.dart';
 import 'screens/view_screen.dart';
+import 'theme.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -37,7 +38,7 @@ class NmasApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
-      title: 'برنامج المخيم',
+      title: 'الجدول الزمني',
       debugShowCheckedModeBanner: false,
       locale: const Locale('ar'),
       supportedLocales: const [Locale('ar')],
@@ -46,10 +47,7 @@ class NmasApp extends StatelessWidget {
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.teal),
-        useMaterial3: true,
-      ),
+      theme: AppTheme.dark,
       routerConfig: _router,
     );
   }
